@@ -17,12 +17,11 @@ const UserSchema = new Schema({
 		required: true
 	},
 	avater: {
-		type: String,
-		required: true
+		type: String
 	},
 	date: {
 		type: String,
-		dafault: Date.now
+		default: Date.now
 	}
 });
 
