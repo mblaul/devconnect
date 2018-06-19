@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 
 const Post = require("../../models/Post");
+const User = require("../../models/User");
 
 //Validate post input
 const validatePostInput = require("../../validation/post");
@@ -13,6 +14,27 @@ const validatePostInput = require("../../validation/post");
 // @access  Public
 router.get("/test", (req, res) => {
 	res.json({ message: "Test comprete!" });
+});
+
+// @route   GET api/posts/
+// @desc    Get all posts
+// @access  Public
+router.get("/", (req, res) => {
+	Post.find()
+		.sort({ date: -1 })
+		.then(posts => res.json(posts))
+		.catch(err => res.status(404).json({ nopostsfound: "No posts found" }));
+});
+
+// @route   GET api/posts/:post_id
+// @desc    Get all posts
+// @access  Public
+router.get("/:post_id", (req, res) => {
+	Post.findById(req.params.post_id)
+		.then(post => res.json(post))
+		.catch(err =>
+			res.status(404).json({ nopostfound: "No post was found with that ID" })
+		);
 });
 
 // @route   POST api/posts/
@@ -37,6 +59,173 @@ router.post(
 		});
 
 		newPost.save().then(post => res.json(post));
+	}
+);
+
+// @route   DELETE api/posts/:post_id
+// @desc    Delete post
+// @access  Private
+router.delete(
+	"/:post_id",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		const errors = {};
+
+		//Check validation
+		if (req.params.post_id === null) {
+			errors.nopost = "No post was given";
+			return res.status(400).json(errors);
+		}
+
+		Post.findOneAndRemove({ _id: req.params.post_id, user: req.user.id })
+			.then(() => {
+				res.json({ message: "Post has been deleted." });
+			})
+			.catch(err =>
+				res.status(400).json({ nopost: "There was problem deleting that post" })
+			);
+	}
+);
+
+// @route   POST api/posts/like/:post_id
+// @desc    Like a post
+// @access  Private
+router.post(
+	"/like/:post_id",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		const errors = {};
+
+		//Check validation
+		if (!req.params.post_id) {
+			errors.nopost = "No post was given";
+			return res.status(400).json(errors);
+		}
+
+		Post.findById(req.params.post_id).then(post => {
+			if (
+				post.likes.filter(like => like.user.toString() === req.user.id).length >
+				0
+			) {
+				return res
+					.status(400)
+					.json({ alreadyliked: "User already liked this post" });
+			}
+
+			//Add user ID to likes array
+			post.likes.unshift({ user: req.user.id });
+			post.save().then(post => res.json(post));
+		});
+	}
+);
+
+// @route   POST api/posts/like/:post_id
+// @desc    Unlike a post
+// @access  Private
+router.post(
+	"/unlike/:post_id",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		const errors = {};
+
+		//Check validation
+		if (!req.params.post_id) {
+			errors.nopost = "No post was given";
+			return res.status(400).json(errors);
+		}
+
+		Post.findById(req.params.post_id)
+			.then(post => {
+				if (
+					post.likes.filter(like => like.user.toString() === req.user.id)
+						.length == 0
+				) {
+					return res
+						.status(400)
+						.json({ notliked: "You have not yet liked this post" });
+				}
+
+				//Remove user from like array
+				const removeIndex = post.likes
+					.map(item => item.user.toString())
+					.indexOf(req.user.id);
+
+				post.likes.splice(removeIndex, 1);
+				post.save().then(post => res.json(post));
+			})
+			.catch(err => {
+				res.status(404).json({ postnotfound: "No post found" });
+			});
+	}
+);
+
+// @route   POST api/posts/like/:post_id
+// @desc	Comment on a post
+// @access  Private
+router.post(
+	"/comment/:post_id",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		const { errors, isValid } = validatePostInput(req.body);
+		//Check validation
+		if (!isValid) {
+			return res.status(400).json(errors);
+		}
+
+		if (req.params.post_id.match(/^[0-9a-fA-F]{24}$/)) {
+			console.log("It's a valid id");
+		}
+
+		Post.findById(req.params.post_id)
+			.then(post => {
+				console.log(post);
+				const newComment = {
+					text: req.body.text,
+					name: req.body.name,
+					avatar: req.body.avatar,
+					user: req.user.id
+				};
+
+				//Add to comments array
+				post.comments.unshift(newComment);
+				post.save().then(post => res.json(post));
+			})
+			.catch(err => res.status(404).json({ postnotfound: "No post found" }));
+	}
+);
+
+// @route   POST api/posts/like/:post_id
+// @desc    Delet a post comment
+// @access  Private
+router.delete(
+	"/comment/:post_id",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		const { errors, isValid } = validatePostInput(req.body);
+		//Check validation
+		if (!isValid) {
+			return res.status(400).json(errors);
+		}
+
+		if (req.params.post_id.match(/^[0-9a-fA-F]{24}$/)) {
+			console.log("It's a valid id");
+		}
+
+		Post.findById(req.params.post_id)
+			.then(post => {
+				console.log(post);
+				const newComment = {
+					text: req.body.text,
+					name: req.body.name,
+					avatar: req.body.avatar,
+					user: req.user.id
+				};
+
+				//Add to comments array
+				post.comments.unshift(newComment);
+				post.save().then(post => res.json(post));
+			})
+			.catch(err => res.status(404).json({ postnotfound: "No post found" }));
 	}
 );
 
