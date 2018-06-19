@@ -172,13 +172,8 @@ router.post(
 			return res.status(400).json(errors);
 		}
 
-		if (req.params.post_id.match(/^[0-9a-fA-F]{24}$/)) {
-			console.log("It's a valid id");
-		}
-
 		Post.findById(req.params.post_id)
 			.then(post => {
-				console.log(post);
 				const newComment = {
 					text: req.body.text,
 					name: req.body.name,
@@ -194,38 +189,32 @@ router.post(
 	}
 );
 
-// @route   POST api/posts/like/:post_id
-// @desc    Delet a post comment
+// @route   POST api/posts/like/:post_id/:comment_id
+// @desc    Delete a post comment
 // @access  Private
 router.delete(
-	"/comment/:post_id",
+	"/comment/:post_id/:comment_id",
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
-		const { errors, isValid } = validatePostInput(req.body);
-		//Check validation
-		if (!isValid) {
-			return res.status(400).json(errors);
-		}
-
-		if (req.params.post_id.match(/^[0-9a-fA-F]{24}$/)) {
-			console.log("It's a valid id");
-		}
-
 		Post.findById(req.params.post_id)
 			.then(post => {
-				console.log(post);
-				const newComment = {
-					text: req.body.text,
-					name: req.body.name,
-					avatar: req.body.avatar,
-					user: req.user.id
-				};
-
-				//Add to comments array
-				post.comments.unshift(newComment);
+				//Check to see if comment exists and if provided user posted it
+				const commentIndex = post.comments.findIndex(
+					comment =>
+						comment.user.toString() === req.user.id &&
+						comment._id.toString() === req.params.comment_id
+				);
+				if (commentIndex === -1) {
+					return res.status(401).json({
+						notauthorized: "You are not authorized to delete this comment."
+					});
+				}
+				post.comments.splice(commentIndex, 1);
 				post.save().then(post => res.json(post));
 			})
-			.catch(err => res.status(404).json({ postnotfound: "No post found" }));
+			.catch(err =>
+				res.status(404).json({ postnotfound: "No post found" + err })
+			);
 	}
 );
 
