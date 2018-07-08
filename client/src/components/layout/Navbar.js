@@ -22,6 +22,7 @@ class Navbar extends Component {
 						className="navlink"
 					>
 						<img
+							className="rounded-circle"
 							src={user.avatar}
 							alt={user.name}
 							style={{ width: "25px", marginRight: "5px" }}
