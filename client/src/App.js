@@ -32,7 +32,7 @@ if (localStorage.jwtToken) {
 		store.dispatch(logoutUser());
 		store.dispatch(clearCurrentProfile());
 		// Redirect to login
-		window.location.href = "./login";
+		window.location.href = "/login";
 	}
 }
 
