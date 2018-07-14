@@ -75,10 +75,10 @@ class CreateProfile extends Component {
 					<InputGroup
 						placeholder="Instagram Profile URL"
 						name="Instagram"
-						icon="fab fa-Instagram"
-						value={this.state.Instagram}
+						icon="fab fa-instagram"
+						value={this.state.instagram}
 						onChange={this.onChange}
-						error={errors.Instagram}
+						error={errors.instagram}
 					/>
 				</div>
 			);
