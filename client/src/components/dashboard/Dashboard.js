@@ -33,16 +33,16 @@ class Dashboard extends Component {
 							Welcome{" "}
 							<Link to={`/profile/${profile.handle}`}> {user.name} </Link>
 						</p>
-						<div class="btn-group mb-4" role="group">
-							<a href="./edit-profile" class="btn btn-light">
-								<i class="fas fa-user-circle text-info mr-1" /> Edit Profile
+						<div className="btn-group mb-4" role="group">
+							<a href="./edit-profile" className="btn btn-light">
+								<i className="fas fa-user-circle text-info mr-1" /> Edit Profile
 							</a>
-							<a href="/add-experience" class="btn btn-light">
-								<i class="fab fa-black-tie text-info mr-1" />
+							<a href="/add-experience" className="btn btn-light">
+								<i className="fab fa-black-tie text-info mr-1" />
 								Add Experience
 							</a>
-							<a href="/add-education" class="btn btn-light">
-								<i class="fas fa-graduation-cap text-info mr-1" />
+							<a href="/add-education" className="btn btn-light">
+								<i className="fas fa-graduation-cap text-info mr-1" />
 								Add Education
 							</a>
 						</div>
@@ -90,7 +90,7 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
 	getCurrentProfile: PropTypes.func.isRequired,
-	deleteProfile: PropTypes.func.isRequired,
+	deleteAccount: PropTypes.func.isRequired,
 	auth: PropTypes.object.isRequired,
 	profile: PropTypes.object.isRequired
 };
