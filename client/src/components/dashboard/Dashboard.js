@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { getCurrentProfile, deleteAccount } from "../../actions/profileActions";
 import Spinner from "../common/Spinner";
 import ProfileActions from "./ProfileActions";
+import Experience from "./Experience";
+import Education from "./Education";
 
 class Dashboard extends Component {
 	componentDidMount() {
@@ -18,7 +20,6 @@ class Dashboard extends Component {
 	render() {
 		const { user } = this.props.auth;
 		const { profile, loading } = this.props.profile;
-
 		let dashboardContent;
 
 		if (profile === null || loading) {
@@ -47,7 +48,8 @@ class Dashboard extends Component {
 							</a>
 						</div>
 						<ProfileActions />
-						{/* TODO exp and edu */}
+						<Experience experience={profile.experience} />
+						<Education education={profile.education} />
 						<div style={{ marginBottom: "60px" }} />
 						<button
 							onClick={this.onDeleteClick.bind(this)}
