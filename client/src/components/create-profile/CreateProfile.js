@@ -101,8 +101,8 @@ class CreateProfile extends Component {
 						error={errors.youtube}
 					/>
 					<InputGroup
-						placeholder="Instagram Profile URL"
-						name="Instagram"
+						placeholder="instagram Profile URL"
+						name="\instagram"
 						icon="fab fa-instagram"
 						value={this.state.instagram}
 						onChange={this.onChange}
@@ -211,7 +211,7 @@ class CreateProfile extends Component {
 									>
 										Add Social Network Links
 									</button>
-									<span className="text muted">Optional</span>
+									<span className="text-muted">Optional</span>
 								</div>
 								{socialInputs}
 								<input
