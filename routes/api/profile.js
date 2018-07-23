@@ -243,10 +243,8 @@ router.delete(
 			.then(profile => {
 				// Get remove index
 				const experiences = profile.experience.map(item => item.id);
-				console.log(experiences);
-				console.log(experiences.includes(req.params.id));
-				if (!experiences.includes(req.params.id)) {
-					errors.noexperience = "this experience do not exists in this profile";
+				if (!experiences.includes(req.params.exp_id)) {
+					errors.noexperience = "This experience do not exist in this profile";
 					return res.status(404).json(errors);
 				}
 				const removeIndex = experiences.indexOf(req.params.id);
