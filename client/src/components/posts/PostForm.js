@@ -25,7 +25,6 @@ class PostForm extends Component {
 
 	onSubmit(e) {
 		e.preventDefault();
-
 		const { user } = this.props.auth;
 		const newPost = {
 			text: this.state.text,
@@ -34,7 +33,7 @@ class PostForm extends Component {
 		};
 
 		this.props.addPost(newPost);
-		this.setState({ text: "" });
+		this.setState({ text: "", errors: {} });
 	}
 
 	onChange(e) {
@@ -48,7 +47,7 @@ class PostForm extends Component {
 				<div className="card card-info">
 					<div className="card-header bg-info text-white">Add post...</div>
 					<div className="card-body">
-						<form>
+						<form onSubmit={this.onSubmit}>
 							<div className="form-group">
 								<TextAreaFieldGroup
 									placeholder="Create a post"
