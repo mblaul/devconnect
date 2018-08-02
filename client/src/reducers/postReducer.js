@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
 		case GET_POSTS:
 			return {
 				...state,
-				payload: action.payload,
+				posts: action.payload,
 				loading: false
 			};
 
