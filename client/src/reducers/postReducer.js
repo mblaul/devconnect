@@ -1,8 +1,8 @@
 import { ADD_POST, GET_POSTS, POST_LOADING } from "../actions/types";
 
 const initialState = {
-	post: [],
-	posts: {},
+	post: {},
+	posts: [],
 	loading: false
 };
 
