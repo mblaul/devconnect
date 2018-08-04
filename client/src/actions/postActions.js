@@ -61,6 +61,32 @@ export const deletePost = postId => dispatch => {
 		);
 };
 
+// Add post like
+export const addLike = postId => dispatch => {
+	axios
+		.post(`/api/posts/like/${postId}`)
+		.then(result => dispatch(getPosts()))
+		.catch(err =>
+			dispatch({
+				type: GET_ERRORS,
+				payload: err.response.data
+			})
+		);
+};
+
+// Remove post like
+export const removeLike = postId => dispatch => {
+	axios
+		.post(`/api/posts/unlike/${postId}`)
+		.then(result => dispatch(getPosts()))
+		.catch(err =>
+			dispatch({
+				type: GET_ERRORS,
+				payload: err.response.data
+			})
+		);
+};
+
 // Set loading state
 export const setPostLoading = () => {
 	return {
