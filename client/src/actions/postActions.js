@@ -2,6 +2,7 @@ import axios from "axios";
 import {
 	ADD_POST,
 	GET_POSTS,
+	GET_POST,
 	GET_ERRORS,
 	POST_LOADING,
 	DELETE_POST
@@ -38,6 +39,24 @@ export const getPosts = () => dispatch => {
 		.catch(err =>
 			dispatch({
 				type: GET_POSTS,
+				payload: null
+			})
+		);
+};
+
+export const getPost = postId => dispatch => {
+	dispatch(setPostLoading());
+	axios
+		.get(`/api/posts/${postId}`)
+		.then(result =>
+			dispatch({
+				type: GET_POST,
+				payload: result.data
+			})
+		)
+		.catch(err =>
+			dispatch({
+				type: GET_POST,
 				payload: null
 			})
 		);
