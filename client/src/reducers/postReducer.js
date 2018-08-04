@@ -23,6 +23,8 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				posts: state.posts.filter(post => post._id !== action.payload)
+				//Give back all of the post IDs except the one we just deleted.
+				//This allows the post to disappear without refreshing the page.
 			};
 
 		case POST_LOADING:

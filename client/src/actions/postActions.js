@@ -50,7 +50,7 @@ export const deletePost = postId => dispatch => {
 		.then(result =>
 			dispatch({
 				type: DELETE_POST,
-				payload: result.data
+				payload: postId
 			})
 		)
 		.catch(err =>
